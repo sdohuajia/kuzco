@@ -82,10 +82,12 @@ function view_logs() {
     kuzco worker logs
 }
 
-# 停止节点的函数
+# 停止删除节点的函数
 function stop_node() {
     echo "正在停止节点..."
     kuzco worker stop
+    cd
+    rm -rf .kuzco
 }
 
 # 重启节点的函数
@@ -105,7 +107,7 @@ function main_menu() {
         echo "1) 安装、升级并启动节点"
         echo "2) 检查 Kuzco 工作状态"
         echo "3) 查看工作日志"
-        echo "4) 停止节点"
+        echo "4) 停止删除节点"
         echo "5) 重启节点"
         echo "6) 退出"
 
