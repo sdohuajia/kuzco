@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 脚本保存路径
+# 脚本保存路径（如果需要使用，可以启用）
 SCRIPT_PATH="$HOME/kuzco.sh"
 
 # 检查是否以root用户运行脚本
@@ -74,16 +74,13 @@ function start_node() {
     read -p "请输入 worker 名称: " worker
     read -p "请输入 code: " code
 
-    echo "正在初始化 Kuzco..."
-    if ! kuzco init; then
-        echo "Kuzco 初始化失败。"
+    echo "正在启动节点..."
+    if kuzco worker start --background --worker "$worker" --code "$code"; then
+        echo "节点已启动。"
+    else
+        echo "节点启动失败。"
         exit 1
     fi
-
-    echo "正在启动节点..."
-    kuzco worker start --background --worker "$worker" --code "$code"
-
-    echo "节点已启动。"
 }
 
 # 检查工作状态的函数
@@ -102,8 +99,13 @@ function view_logs() {
 function stop_node() {
     echo "正在停止节点..."
     kuzco worker stop
-    cd
-    rm -rf .kuzco
+    read -p "确认删除 .kuzco 目录？此操作不可恢复 (y/n): " confirm
+    if [[ $confirm =~ ^[Yy]$ ]]; then
+        rm -rf "$HOME/.kuzco"
+        echo ".kuzco 目录已删除。"
+    else
+        echo "删除操作已取消。"
+    fi
 }
 
 # 重启节点的函数
