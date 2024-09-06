@@ -25,24 +25,39 @@ function check_and_install_screen() {
         echo "screen 已经安装。"
     else
         echo "screen 未安装，正在安装..."
-        apt-get install screen -y
+        apt update -y
+        apt install screen -y
+    fi
+}
+
+# 检查并安装 curl 的函数
+function check_and_install_curl() {
+    if command -v curl >/dev/null 2>&1; then
+        echo "curl 已经安装。"
+    else
+        echo "curl 未安装，正在安装..."
+        apt update -y
+        apt install curl -y
     fi
 }
 
 # 安装节点的函数
 function install_node() {
     echo "正在更新软件包列表..."
-    apt-get update
+    apt update -y
 
     echo "正在升级软件包..."
-    apt-get upgrade -y
+    apt upgrade -y
 
     echo "正在清理不再需要的软件包..."
-    apt-get autoremove -y
-    apt-get autoclean
+    apt autoremove -y
+    apt autoclean
 
     echo "检查并安装 screen..."
     check_and_install_screen
+
+    echo "检查并安装 curl..."
+    check_and_install_curl
 
     echo "正在执行远程安装脚本..."
     if ! curl -fsSL https://kuzco.xyz/install.sh | sh; then
@@ -57,20 +72,16 @@ function install_node() {
     fi
 
     echo "节点安装和升级完成！"
+}
 
-    # 初始化 Kuzco
+# 初始化并启动节点的函数
+function init_and_start_node() {
     echo "正在初始化 Kuzco..."
     if ! kuzco init; then
         echo "Kuzco 初始化失败。"
         exit 1
     fi
 
-    # 调用启动节点的函数
-    start_node
-}
-
-# 启动节点的函数
-function start_node() {
     read -p "请输入 worker 名称: " worker
     read -p "请输入 code: " code
 
@@ -122,33 +133,37 @@ function main_menu() {
         echo "================================================================"
         echo "退出脚本，请按键盘 ctrl + C 退出即可"
         echo "请选择要执行的操作:"
-        echo "1) 安装、升级并启动节点"
-        echo "2) 检查 Kuzco 工作状态"
-        echo "3) 查看工作日志"
-        echo "4) 停止删除节点"
-        echo "5) 重启节点"
-        echo "6) 退出"
+        echo "1) 安装、升级节点"
+        echo "2) 初始化并启动节点"
+        echo "3) 检查 Kuzco 工作状态"
+        echo "4) 查看工作日志"
+        echo "5) 停止并删除节点"
+        echo "6) 重启节点"
+        echo "7) 退出"
 
-        read -p "请输入选项 [1-6]: " choice
+        read -p "请输入选项 [1-7]: " choice
 
         case $choice in
             1)
-                check_systemd
                 install_node
                 ;;
             2)
-                check_status
+                check_systemd
+                init_and_start_node
                 ;;
             3)
-                view_logs
+                check_status
                 ;;
             4)
-                stop_node
+                view_logs
                 ;;
             5)
-                restart_node
+                stop_node
                 ;;
             6)
+                restart_node
+                ;;
+            7)
                 echo "退出脚本。"
                 exit 0
                 ;;
