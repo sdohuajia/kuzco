@@ -64,6 +64,12 @@ function start_node() {
     read -p "请输入 worker 名称: " worker
     read -p "请输入 code: " code
 
+    echo "正在初始化 Kuzco..."
+    if ! kuzco init; then
+        echo "Kuzco 初始化失败。"
+        exit 1
+    fi
+
     echo "正在启动节点..."
     kuzco worker start --background --worker "$worker" --code "$code"
 
