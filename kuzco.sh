@@ -41,6 +41,9 @@ function install_node() {
     echo "检查并安装 screen..."
     check_and_install_screen
 
+    echo "初始化节点..."
+    kuzco init
+
     echo "正在执行远程安装脚本..."
     if ! curl -fsSL https://kuzco.xyz/install.sh | sh; then
         echo "远程安装脚本执行失败。"
