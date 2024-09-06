@@ -58,6 +58,13 @@ function install_node() {
 
     echo "节点安装和升级完成！"
 
+    # 初始化 Kuzco
+    echo "正在初始化 Kuzco..."
+    if ! kuzco init; then
+        echo "Kuzco 初始化失败。"
+        exit 1
+    fi
+
     # 调用启动节点的函数
     start_node
 }
