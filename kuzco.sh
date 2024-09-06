@@ -1,4 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+# 脚本保存路径
+SCRIPT_PATH="$HOME/kuzco.sh"
 
 # 检查是否以root用户运行脚本
 if [ "$(id -u)" != "0" ]; then
