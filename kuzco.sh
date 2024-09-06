@@ -42,29 +42,18 @@ function install_node() {
     check_and_install_screen
 
     echo "正在执行远程安装脚本..."
-    if ! curl -fsSL https://kuzco.xyz/install.sh | sh; then
-        echo "远程安装脚本执行失败。"
-        exit 1
-    fi
+    curl -fsSL https://kuzco.xyz/install.sh | sh
+    echo "远程安装脚本完成。"
+
+    # 等待用户按任意键继续
+    echo "按任意键继续..."
+    read -n 1 -s
 
     echo "初始化节点..."
     kuzco init
 
     echo "节点安装和升级完成！"
 
-    # 调用启动节点的函数
-    start_node
-}
-
-# 启动节点的函数
-function start_node() {
-    read -p "请输入 worker 名称: " worker
-    read -p "请输入 code: " code
-
-    echo "正在启动节点..."
-    kuzco worker start --background --worker "$worker" --code "$code"
-
-    echo "节点已启动。"
 }
 
 # 检查工作状态的函数
