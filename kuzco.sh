@@ -96,10 +96,19 @@ function view_logs() {
 # 停止删除节点的函数
 function stop_node() {
     echo "正在停止节点..."
+    
+    # 停止节点服务
     kuzco worker stop
+    
+    # 清理 .kuzco 目录
     cd
     rm -rf .kuzco
     
+    # 清除 screen 会话
+    echo "正在清除 screen 会话..."
+    screen -S kuzco -X quit
+    
+    echo "节点已停止并清理完毕。"
 }
 
 # 主菜单函数
