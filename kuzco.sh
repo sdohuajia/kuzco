@@ -44,7 +44,11 @@ function install_node() {
     echo "正在执行远程安装脚本..."
     curl -fsSL https://kuzco.xyz/install.sh | sh
     echo "远程安装脚本完成。"
-
+    
+    echo "正在执行升级脚本..."
+    kuzco upgrade
+    echo "升级脚本完成。"
+    
     # 返回主菜单
     echo "节点安装完成，返回主菜单..."
     sleep 3
