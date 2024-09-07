@@ -57,20 +57,40 @@ function install_node() {
 # 启动节点的函数
 function start_node() {
     echo "初始化节点..."
-    kuzco init
-    echo "节点初始化完成！"
-}
+    
+    # 启动一个名为 'kuzco' 的新 screen 会话，并在后台运行
+    screen -S kuzco -dm
+    
+    # 在 screen 会话中执行 'kuzco init'
+    screen -S kuzco -X stuff "kuzco init\n"
+    sleep 5  # 等待 'kuzco init' 完成启动，确保初始化脚本已开始运行
 
-# 检查工作状态的函数
-function check_status() {
-    echo "正在检查 Kuzco 工作的状态..."
-    kuzco worker status
+    # 输入电子邮件
+    read -p "请输入电子邮件: " email
+    screen -S kuzco -X stuff "$email\n"
+    sleep 1  # 等待1秒，确保电子邮件已输入
+
+    # 输入密码
+    read -sp "请输入密码: " password
+    echo  # 打印一个换行符以结束密码输入
+    screen -S kuzco -X stuff "$password\n"
+    sleep 1  # 等待1秒，确保密码已输入
+
+    # 输入工人名称
+    read -p "请输入工人的名称 (例如 'Sam's Laptop'): " worker_name
+    screen -S kuzco -X stuff "$worker_name\n"
+    sleep 1  # 等待1秒，确保工人名称已输入
+
+    # 选择 "Yes" 选项
+    screen -S kuzco -X stuff "\n"  # 按 Enter 键选择 "Yes"
+    
+    echo "节点初始化完成！"
 }
 
 # 查看工作日志的函数
 function view_logs() {
     echo "正在查看工作日志..."
-    kuzco worker logs
+    screen -r kuzco
 }
 
 # 停止删除节点的函数
@@ -79,12 +99,6 @@ function stop_node() {
     kuzco worker stop
     cd
     rm -rf .kuzco
-}
-
-# 重启节点的函数
-function restart_node() {
-    echo "正在重启节点..."
-    kuzco worker restart
 }
 
 # 主菜单函数
@@ -97,13 +111,11 @@ function main_menu() {
         echo "请选择要执行的操作:"
         echo "1) 安装、升级并启动节点"
         echo "2) 启动节点"
-        echo "3) 检查 Kuzco 工作状态"
-        echo "4) 查看工作日志"
-        echo "5) 停止删除节点"
-        echo "6) 重启节点"
-        echo "7) 退出"
+        echo "3) 查看工作日志"
+        echo "4) 停止删除节点"
+        echo "5) 退出"
 
-        read -p "请输入选项 [1-7]: " choice
+        read -p "请输入选项 [1-5]: " choice
 
         case $choice in
             1)
@@ -114,18 +126,12 @@ function main_menu() {
                 start_node
                 ;;
             3)
-                check_status
-                ;;
-            4)
                 view_logs
                 ;;
-            5)
+            4)
                 stop_node
                 ;;
-            6)
-                restart_node
-                ;;
-            7)
+            5)
                 echo "退出脚本。"
                 exit 0
                 ;;
