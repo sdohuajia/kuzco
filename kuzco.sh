@@ -45,15 +45,16 @@ function install_node() {
     curl -fsSL https://kuzco.xyz/install.sh | sh
     echo "远程安装脚本完成。"
 
-    # 等待用户按任意键继续
-    echo "按任意键继续..."
-    read -n 1 -s
+    # 返回主菜单
+    echo "节点安装完成，返回主菜单..."
+    sleep 3
+}
 
+# 启动节点的函数
+function start_node() {
     echo "初始化节点..."
     kuzco init
-
-    echo "节点安装和升级完成！"
-
+    echo "节点初始化完成！"
 }
 
 # 检查工作状态的函数
@@ -91,13 +92,14 @@ function main_menu() {
         echo "退出脚本，请按键盘 ctrl + C 退出即可"
         echo "请选择要执行的操作:"
         echo "1) 安装、升级并启动节点"
-        echo "2) 检查 Kuzco 工作状态"
-        echo "3) 查看工作日志"
-        echo "4) 停止删除节点"
-        echo "5) 重启节点"
-        echo "6) 退出"
+        echo "2) 启动节点"
+        echo "3) 检查 Kuzco 工作状态"
+        echo "4) 查看工作日志"
+        echo "5) 停止删除节点"
+        echo "6) 重启节点"
+        echo "7) 退出"
 
-        read -p "请输入选项 [1-6]: " choice
+        read -p "请输入选项 [1-7]: " choice
 
         case $choice in
             1)
@@ -105,18 +107,21 @@ function main_menu() {
                 install_node
                 ;;
             2)
-                check_status
+                start_node
                 ;;
             3)
-                view_logs
+                check_status
                 ;;
             4)
-                stop_node
+                view_logs
                 ;;
             5)
-                restart_node
+                stop_node
                 ;;
             6)
+                restart_node
+                ;;
+            7)
                 echo "退出脚本。"
                 exit 0
                 ;;
