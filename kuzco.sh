@@ -99,6 +99,7 @@ function stop_node() {
     kuzco worker stop
     cd
     rm -rf .kuzco
+    
 }
 
 # 主菜单函数
